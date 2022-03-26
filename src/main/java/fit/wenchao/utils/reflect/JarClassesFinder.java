@@ -8,10 +8,10 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class JarClassesFinder {
-    public Set<Class> findClasses(URLClassLoader classLoader, JarFile jarFile, String basePackage, Class<?> superClass) throws ClassNotFoundException {
+    public Set<Class> findClasses(URLClassLoader classLoader, JarFile jarFile, String basePackage, Class<?> superClass) {
         Set<Class> classes = new HashSet<>();
         Enumeration<JarEntry> entries = jarFile.entries();
-        Class<?> clazz;
+        Class<?> clazz = null;
         while (entries.hasMoreElements()) {
             JarEntryEnhancer jarEntry = new JarEntryEnhancer(entries.nextElement());
 
@@ -26,7 +26,11 @@ public class JarClassesFinder {
                 continue;
             }
 
-            clazz = classLoader.loadClass(fullClassId);
+            try {
+                clazz = classLoader.loadClass(fullClassId);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             if (clazz != null && !clazz.isInterface() && superClass.isAssignableFrom(clazz)) {
                 classes.add(clazz);
             }

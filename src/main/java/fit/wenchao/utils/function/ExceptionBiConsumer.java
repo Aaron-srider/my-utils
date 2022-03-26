@@ -43,8 +43,7 @@ package fit.wenchao.utils.function;
  *         }
  *     }
  * } }
- * </pre>
- *</p>
+ *</pre>
  *
  *
  * @param <T> 函数的第一个参数类型

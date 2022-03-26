@@ -15,7 +15,7 @@ public class JarURLClassLoader {
 
     /**
      * jar的url格式为：jar:file:///xxx/xxx/xxx.jar!/
-     * @param jar
+     * @param jar jar文件的URL
      */
     public JarURLClassLoader(URL jar) {
         String protocol = jar.getProtocol();
@@ -36,8 +36,9 @@ public class JarURLClassLoader {
      * @param superClass  指定的父类
      * @param basePackage 从该包下寻找加载目标
      * @return 返回所有superClass及其子类
+     * @throws IOException 打开jar文件时出现io错误
      */
-    public Set<Class> loadSubClass(Class<?> superClass, String basePackage) throws IOException, ClassNotFoundException {
+    public Set<Class> loadSubClass(Class<?> superClass, String basePackage) throws IOException {
         JarFile jarFile = openJar();
         return doLoadSubClass(superClass, basePackage, jarFile);
     }
@@ -46,7 +47,7 @@ public class JarURLClassLoader {
         return ((JarURLConnection) jar.openConnection()).getJarFile();
     }
 
-    private Set<Class> doLoadSubClass(Class<?> superClass, String basePackage, JarFile jarFile) throws ClassNotFoundException {
+    private Set<Class> doLoadSubClass(Class<?> superClass, String basePackage, JarFile jarFile) {
         JarClassesFinder jarClassFinder = new JarClassesFinder();
         return jarClassFinder.findClasses(classLoader, jarFile, basePackage, superClass);
     }

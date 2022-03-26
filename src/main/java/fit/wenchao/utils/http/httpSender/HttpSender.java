@@ -35,8 +35,8 @@ public abstract class HttpSender {
     /**
      * 从map中拼出get请求的字符串参数
      *
-     * @param paramMap
-     * @return 正常返回key1=value1&key2=value2形式参数；否则返回null
+     * @param paramMap 封装了请求参数的map
+     * @return 正常返回拼接好的参数串；否则返回null
      */
     protected static String getParamStr(Map<String, String> paramMap) {
         String paramStr = null;
@@ -114,6 +114,7 @@ public abstract class HttpSender {
 
     /**
      * 创建HttpRequest，不同方法的Http请求有不同的创建方式，由相应的子类实现
+     * @return 返回创建的HttpRequest对象
      */
     protected abstract HttpRequestBase getHttpReq();
 }

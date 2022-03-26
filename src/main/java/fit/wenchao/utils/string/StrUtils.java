@@ -10,6 +10,9 @@ public class StrUtils {
 
     /**
      * 如果参数只有一个，并且是数组，请使用asList将其转换为List，如果是多个数组，可以不用转换。
+     * @param format 格式化字符串，其中包含占位符<pre>"{}"</pre>，形式为：<pre>{@code "the result is:{}, expected is:{}"}</pre>
+     * @param args 依次对应format模板中的占位符
+     * @return 返回输出的字符串
      */
     public static String outf(String format, Object... args) {
         String resultString

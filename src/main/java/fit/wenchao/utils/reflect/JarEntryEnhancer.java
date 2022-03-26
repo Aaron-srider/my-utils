@@ -24,6 +24,8 @@ public class JarEntryEnhancer {
 
     /**
      * 判断该entry是否是class文件
+     *
+     * @return 若jarEntry是.class文件，返回true，否则false
      */
     public boolean isClass() {
         return jarEntry.getName().endsWith(CLASS_SUFFIX);
@@ -31,6 +33,8 @@ public class JarEntryEnhancer {
 
     /**
      * 判断该entry是否是包
+     *
+     * @return 若jarEntry是package，返回true，否则false
      */
     public boolean isPackage() {
         String name = jarEntry.getName();

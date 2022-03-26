@@ -1,0 +1,13 @@
+fit.wenchao.spring.test
+fit.wenchao.utils.basic
+fit.wenchao.utils.collection
+fit.wenchao.utils.function
+fit.wenchao.utils.http
+fit.wenchao.utils.http.httpSender
+fit.wenchao.utils.properties
+fit.wenchao.utils.proxy
+fit.wenchao.utils.reflect
+fit.wenchao.utils.string
+fit.wenchao.utils.timer
+fit.wenchao.utils.web.req
+fit.wenchao.utils.web.response

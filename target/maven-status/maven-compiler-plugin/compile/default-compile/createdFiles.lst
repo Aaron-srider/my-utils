@@ -36,6 +36,7 @@ fit/wenchao/utils/proxy/ObjectWrapperUtils.class
 fit/wenchao/utils/basic/BasicUtils$LoopState.class
 fit/wenchao/utils/reflect/Test.class
 fit/wenchao/utils/http/HttpUtils$PoolingHttpClientConnectionManagerHolder.class
+fit/wenchao/utils/string/StringFormatter.class
 fit/wenchao/utils/web/response/HttpServletRespEnhanceImpl.class
 fit/wenchao/utils/function/ExceptionTriConsumer.class
 fit/wenchao/utils/function/VoidFunction.class
@@ -48,6 +49,7 @@ fit/wenchao/utils/proxy/ObjectWrapperBase.class
 fit/wenchao/utils/reflect/A.class
 fit/wenchao/utils/web/req/HttpServletReqEnhanceBase.class
 fit/wenchao/utils/basic/BasicUtils$GenericListSeqAdapter.class
+fit/wenchao/utils/string/StringFormatter$Entry.class
 fit/wenchao/utils/proxy/ObjectWrapperBase$Registry.class
 fit/wenchao/utils/string/StrUtils.class
 fit/wenchao/utils/reflect/JarURLClassLoader.class

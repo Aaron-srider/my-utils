@@ -10,6 +10,7 @@ public class BasicUtils {
      * while循环
      *
      * @param voidFunction 循环体
+     * @throws Exception 循环体函数抛出的异常
      */
     public static void loop(VoidFunction voidFunction) throws Exception {
         while (true) {
@@ -22,6 +23,7 @@ public class BasicUtils {
      *
      * @param lp_count     要执行的次数
      * @param voidFunction lambda，不接收任何参数
+     * @throws Exception 循环体函数抛出的异常
      */
     @Deprecated
     public static void loop(int lp_count, VoidFunction voidFunction) throws Exception {
@@ -294,6 +296,7 @@ public class BasicUtils {
      *
      * @param lp_count 要遍历的遍数
      * @param consumer lambda，接收当前index
+     * @throws Exception 循环体函数抛出的异常
      */
     @Deprecated
     public static void loop(int lp_count, ExceptionConsumer<Integer> consumer) throws Exception {
@@ -324,6 +327,7 @@ public class BasicUtils {
      *
      * @param lp_count   要遍历的遍数
      * @param biConsumer lambda，接收当前index，和循环控制变量loopState
+     * @throws Exception 循环体函数抛出的异常
      */
     @Deprecated
     public static void loop(int lp_count, ExceptionBiConsumer<Integer, LoopState> biConsumer) throws Exception {
@@ -352,6 +356,7 @@ public class BasicUtils {
      * @param lp_count   要遍历的遍数
      * @param trConsumer lambda，接收当前index、循环控制变量loopState，和一个标志位flag
      * @return 返回标志位flag的值
+     * @throws Exception 循环体函数抛出的异常
      */
     @Deprecated
     public static boolean loop(int lp_count, ExceptionTriConsumer<Integer, LoopState, Flag> trConsumer) throws Exception {
@@ -450,6 +455,9 @@ public class BasicUtils {
      *
      * @param map         要遍历的map
      * @param triConsumer lambda，接收当前entry、当前entry的key、当前entry的value
+     * @throws Exception 循环体函数抛出的异常
+     * @param <K> Map的key类型
+     * @param <V> Map的value类型
      */
     public static <K, V> void loop(Map<K, V> map, ExceptionTriConsumer<Map.Entry<K, V>, K, V> triConsumer) throws Exception {
         Set<Map.Entry<K, V>> entries = map.entrySet();
