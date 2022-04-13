@@ -1,6 +1,6 @@
-fit/wenchao/utils/basic/BasicUtilsTest.class
-fit/wenchao/utils/reflect/JarURLClassLoaderTest.class
-fit/wenchao/utils/string/StrUtilsTest.class
-fit/wenchao/utils/collection/MyArrayListTest.class
-fit/wenchao/utils/timer/TimerTest.class
-fit/wenchao/utils/basic/EnumList.class
+fit\wenchao\utils\collection\MyArrayListTest.class
+fit\wenchao\utils\reflect\JarURLClassLoaderTest.class
+fit\wenchao\utils\basic\BasicUtilsTest.class
+fit\wenchao\utils\basic\EnumList.class
+fit\wenchao\utils\string\StrUtilsTest.class
+fit\wenchao\utils\timer\TimerTest.class

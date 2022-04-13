@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 public class FileUtilsTest {
 
     @Test
@@ -71,6 +73,15 @@ public class FileUtilsTest {
         FileUtils.forceMkdir(docs);
 
         FileUtils.copyFileToDirectory(myfile2, docs);
+    }
+
+    @Test
+    public void writeLines() throws IOException {
+
+        File myfile1 = new File("src/main/resources/myfile.txt");
+        File myfile2 = new File("src/main/resources/myfile2.txt");
+
+       FileUtils.writeLines(myfile1, asList("hello", "my", "friend"));
     }
 
 }

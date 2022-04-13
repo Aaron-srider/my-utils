@@ -2,6 +2,7 @@ package fit.wenchao.utils.properties;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 
 public class PropertiesUtils {
@@ -14,7 +15,8 @@ public class PropertiesUtils {
     public static Properties getProperties(String propertiesName)  {
         try(InputStream resource = ClassLoader.getSystemClassLoader().getResourceAsStream(propertiesName);){
             Properties properties = new Properties();
-            properties.load(resource);
+            assert resource != null;
+            properties.load(new InputStreamReader(resource,"UTF-8"));
             return properties;
         } catch (IOException e) {
             e.printStackTrace();

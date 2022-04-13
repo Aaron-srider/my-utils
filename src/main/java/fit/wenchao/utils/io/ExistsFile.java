@@ -9,8 +9,13 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Predicate;
 
 import static fit.wenchao.utils.string.StrUtils.ft;
+import static java.util.Arrays.asList;
 
 public class ExistsFile {
 
@@ -51,47 +56,38 @@ public class ExistsFile {
     }
 
     public String getName() throws FileNotFoundException {
-        checkUsingFile();
         return file.getName();
     }
 
     public String getParent() throws FileNotFoundException {
-        checkUsingFile();
         return file.getParent();
     }
 
     public File getParentFile() throws FileNotFoundException {
-        checkUsingFile();
         return file.getParentFile();
     }
 
     public String getPath() throws FileNotFoundException {
-        checkUsingFile();
         return file.getPath();
     }
 
     public boolean isAbsolute() throws FileNotFoundException {
-        checkUsingFile();
         return file.isAbsolute();
     }
 
     public String getAbsolutePath() throws FileNotFoundException {
-        checkUsingFile();
         return file.getAbsolutePath();
     }
 
     public File getAbsoluteFile() throws FileNotFoundException {
-        checkUsingFile();
         return file.getAbsoluteFile();
     }
 
     public String getCanonicalPath() throws IOException {
-        checkUsingFile();
         return file.getCanonicalPath();
     }
 
     public File getCanonicalFile() throws IOException {
-        checkUsingFile();
         return file.getCanonicalFile();
     }
 
@@ -145,14 +141,14 @@ public class ExistsFile {
     }
 
     private void checkCreateFile() throws FileAlreadyExistsException {
-        if(file.exists()) {
+        if (file.exists()) {
             String fileType = "";
-            if( file.isDirectory()) {
+            if (file.isDirectory()) {
                 fileType = "dir";
             } else {
                 fileType = "file";
             }
-            String failMsg = ft("There is already a {} \"{}\"",fileType,file);
+            String failMsg = ft("There is already a {} \"{}\"", fileType, file);
             throw new FileAlreadyExistsException(failMsg);
         }
     }
@@ -182,31 +178,50 @@ public class ExistsFile {
         return file.list(filter);
     }
 
-    public File[] listFiles() throws FileNotFoundException {
-        checkUsingFile();
-        return file.listFiles();
+    private List<ExistsFile> convertToExistsFiles(List<File> files) {
+        List<ExistsFile> existsFiles = new ArrayList<>();
+        for (File file1 : files) {
+            ExistsFile existsFile = new ExistsFile(file1);
+            existsFiles.add(existsFile);
+        }
+        return existsFiles;
     }
 
-    public File[] listFiles(FilenameFilter filter) throws FileNotFoundException {
-        checkUsingFile();
-        return file.listFiles(filter);
+    private List<ExistsFile> returnFileList( File[] files) {
+        if (files == null) {
+            return Collections.emptyList();
+        }
+        return convertToExistsFiles(asList(files));
     }
 
-    public File[] listFiles(FileFilter filter) throws FileNotFoundException {
+    public List<ExistsFile> listFiles() throws FileNotFoundException {
         checkUsingFile();
-        return file.listFiles(filter);
+        File[] files = file.listFiles();
+        return returnFileList(files);
     }
 
+    public List<ExistsFile> listFiles(FilenameFilter filter) throws FileNotFoundException {
+        checkUsingFile();
+
+        File[] files = file.listFiles(filter);
+        return returnFileList(files);
+    }
+
+    public List<ExistsFile> listFiles(FileFilter filter) throws FileNotFoundException {
+        checkUsingFile();
+        File[] files = file.listFiles(filter);
+        return returnFileList(files);
+    }
 
     private void checkMkdir() throws FileAlreadyExistsException {
-        if(file.exists()) {
+        if (file.exists()) {
             String fileType = "";
-            if( file.isDirectory()) {
+            if (file.isDirectory()) {
                 fileType = "dir";
             } else {
                 fileType = "file";
             }
-            String failMsg = ft("There is already a {} \"{}\"",fileType,file);
+            String failMsg = ft("There is already a {} \"{}\"", fileType, file);
             throw new FileAlreadyExistsException(failMsg);
         }
     }
@@ -221,19 +236,34 @@ public class ExistsFile {
         return file.mkdirs();
     }
 
-
-
-
     /**
      * 移动本文件（不是目录）到指定文件或目录，如果目标与本文件在同一目录，相当于重命名
-     * @param dest 目标文件
-     * @throws IOException 1.源文件不存在或是个目录 2.目标文件已经存在 3.目标目录不存在
+     *
+     * @param dest 将本文件移动的目标文件
+     * @param dir 指明是否要将本文件移动到另一个文件夹
+     * @throws IOException i/o异常
      */
-    public void moveTo(File dest) throws IOException {
-        try{
-            FileUtils.moveFile(this.file, dest);
-        } catch (FileExistsException ex) {
-            FileUtils.moveFileToDirectory(this.file, dest, true);
+    public void moveTo(ExistsFile dest, boolean dir) throws IOException {
+        if(this.isFile()) {
+            if (dir) {
+                FileUtils.moveFileToDirectory(this.file, dest.getUnderlyingFile(), true);
+                this.file = new File(dest.getAbsolutePath() + File.separator + file.getName());
+            } else {
+                if(!this.file.getAbsolutePath().equals(dest.getUnderlyingFile().getAbsolutePath())) {
+                    FileUtils.moveFile(this.file, dest.getUnderlyingFile());
+                    this.file = new File(dest.getAbsolutePath());
+                }
+            }
+        } else {
+            if (dir) {
+                FileUtils.moveDirectoryToDirectory(this.file, dest.getUnderlyingFile(), true);
+                this.file = new File(dest.getAbsolutePath() + File.separator + file.getName());
+            } else {
+                if(!this.file.getAbsolutePath().equals(dest.getUnderlyingFile().getAbsolutePath())) {
+                    FileUtils.moveDirectory(this.file, dest.getUnderlyingFile());
+                    this.file = new File(dest.getAbsolutePath());
+                }
+            }
         }
     }
 
@@ -314,23 +344,23 @@ public class ExistsFile {
     }
 
     public Path toPath() throws FileNotFoundException {
-        checkUsingFile();
         return file.toPath();
     }
 
-    public File getUnderlyingFile()  {
+    public File getUnderlyingFile() {
         return this.file;
     }
 
     /**
      * 拷贝一份自身到指定文件，如果目标已经存在且不是目录，将覆盖。
+     *
      * @param destFilePath 目标文件完整路径
      * @throws IOException 1.源文件是目录 2.源文件和目标文件相同 3.目标文件目录无法创建（已经存在且是个文件） 4.目标文件
-     * 已经存在且没有写权限 5.目标文件已存在且是目录 6.内容没拷贝完全
+     *                     已经存在且没有写权限 5.目标文件已存在且是目录 6.内容没拷贝完全
      */
     public ExistsFile copyTo(String destFilePath) throws IOException {
         File dest = new File(destFilePath);
-        if(dest.exists()) {
+        if (dest.exists()) {
             throw new FileExistsException("Destination '" + dest + "' exists");
         }
         FileUtils.copyFile(this.file, dest);

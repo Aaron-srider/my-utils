@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import static fit.wenchao.utils.string.StrUtils.ft;
+
 class ExistsFileTest {
 
     @Test
@@ -40,8 +42,21 @@ class ExistsFileTest {
     }
 
     @Test
-    public void renameTo() throws IOException {
+    public void renameFileTo() throws IOException {
         ExistsFile file = new ExistsFile("c:\\Users\\wc\\Desktop\\test");
-        file.moveTo(new File("c:\\Users\\wc\\Desktop\\testMkdir"));
+        file.moveTo(new ExistsFile(new File("c:\\\\Users\\\\wc\\\\Desktop\\testMkdir")), true);
+        System.out.println(file);
+        System.out.println(ft("file exists:{}", file.exists()));
+
+        file.moveTo(new ExistsFile(new File(file.getParentFile().getParent())),true);
+        System.out.println(file);
+    }
+
+    @Test
+    public void renameDirTo() throws IOException {
+        ExistsFile file = new ExistsFile("c:\\Users\\wc\\Desktop\\testMkdirxx");
+        file.moveTo(new ExistsFile(new File("c:\\\\Users\\\\wc\\\\Desktop\\testMkdirxxx")), true);
+        System.out.println(file);
+        System.out.println(ft("file exists:{}", file.exists()));
     }
 }

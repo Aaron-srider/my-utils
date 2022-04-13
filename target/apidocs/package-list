@@ -4,6 +4,7 @@ fit.wenchao.utils.collection
 fit.wenchao.utils.function
 fit.wenchao.utils.http
 fit.wenchao.utils.http.httpSender
+fit.wenchao.utils.io
 fit.wenchao.utils.properties
 fit.wenchao.utils.proxy
 fit.wenchao.utils.reflect
