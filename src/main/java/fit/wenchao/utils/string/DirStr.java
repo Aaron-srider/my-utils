@@ -19,11 +19,18 @@ public class DirStr {
         setDirStr(dirStr);
     }
 
+    /**
+     * 传入一个字符串，为本对象赋值，规定，传入的路径必须以/开头，不能以/结尾；
+     *
+     * @param dirStr 用来初始化本对象的路径或包字符串
+     */
     public void setDirStr(String dirStr) {
         this.dirStr = filePathBuilder(dirStr).build();
         if (dirStr.contains(".")) {
             dirStringType = DirStringType.PCK;
-        } else if (dirStr.contains(File.separator)) {
+        } else if (!dirStr.contains(File.separator)) {
+            dirStringType = DirStringType.PCK;
+        } else {
             dirStringType = DirStringType.PATH;
         }
     }
@@ -37,7 +44,11 @@ public class DirStr {
         return null;
     }
 
-
+    /**
+     * 返回目录的路径形式字符串
+     *
+     * @return 返回目录的路径形式字符串，规定，返回的路径必须以File.separator开头
+     */
     public String toPath() {
         if (this.dirStringType.equals(DirStringType.PATH)) {
             return dirStr;

@@ -3,6 +3,7 @@ package fit.wenchao.utils.collection;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public class MapService {
 
     Map<String, Object> innerMap;
@@ -24,6 +25,7 @@ public class MapService {
         return new MapService(new HashMap<String, Object>());
     }
 
+    @Deprecated
     public static <K, V> Map<K, V> ofMap(Object... input) {
 
         if ((input.length & 1) != 0) {
@@ -39,33 +41,39 @@ public class MapService {
         return kvHashMap;
     }
 
+    @Deprecated
     public static <K, V> Map<K, V> of(K k1, V v1) {
         return ofMap(k1, v1);
     }
 
+    @Deprecated
     public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2) {
         return ofMap(k1, v1, k2, v2);
     }
 
+    @Deprecated
     public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3) {
         return ofMap(k1, v1, k2, v2, k3, v3);
     }
 
-
+    @Deprecated
     public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
         return ofMap(k1, v1, k2, v2, k3, v3, k4, v4);
     }
 
+    @Deprecated
     public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4,
                                       K k5, V v5) {
         return ofMap(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
     }
 
+    @Deprecated
     public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4,
                                       K k5, V v5, K k6, V v6) {
         return ofMap(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6);
     }
 
+    @Deprecated
     public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4,
                                       K k5, V v5, K k6, V v6, K k7, V v7) {
         return ofMap(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7);

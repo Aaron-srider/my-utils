@@ -1,9 +1,12 @@
 package fit.wenchao.utils.basic;
 
+import fit.wenchao.utils.collection.MapService;
+import fit.wenchao.utils.collection.MyArrayList;
 import fit.wenchao.utils.function.*;
 
 import java.util.*;
 
+import static fit.wenchao.utils.collection.MyArrayList.asList;
 public class BasicUtils {
 
     /**
@@ -201,6 +204,7 @@ public class BasicUtils {
         int size();
     }
 
+
     private static class GenericArraySeqAdapter<T> implements GenericSequenceAdapter<T> {
 
         T[] array;
@@ -381,7 +385,7 @@ public class BasicUtils {
         return loopFlag.get();
     }
 
-
+    @Deprecated
     private static SequenceAdapter getAdapter(Object targetSeq) {
         SequenceAdapter sequenceAdapter = null;
         for (int i = 0; i < sequenceAdapters.size(); i++) {
@@ -455,10 +459,11 @@ public class BasicUtils {
      *
      * @param map         要遍历的map
      * @param triConsumer lambda，接收当前entry、当前entry的key、当前entry的value
+     * @param <K>         Map的key类型
+     * @param <V>         Map的value类型
      * @throws Exception 循环体函数抛出的异常
-     * @param <K> Map的key类型
-     * @param <V> Map的value类型
      */
+    @Deprecated
     public static <K, V> void loop(Map<K, V> map, ExceptionTriConsumer<Map.Entry<K, V>, K, V> triConsumer) throws Exception {
         Set<Map.Entry<K, V>> entries = map.entrySet();
         for (Map.Entry<K, V> entry : entries) {
@@ -466,7 +471,9 @@ public class BasicUtils {
         }
     }
 
-    public static <T> void gloop(GenericSequenceAdapter<T> seqAdapter, ExceptionTriConsumer<Integer, T, LoopState> trConsumer) throws Exception {
+    @Deprecated
+    public static <T> void gloop(GenericSequenceAdapter<T> seqAdapter,
+                                 ExceptionTriConsumer<Integer, T, LoopState> trConsumer) throws Exception {
         LoopState loopState = new LoopState();
         for (int i = 0; i < seqAdapter.size(); i++) {
             loopState.reset();
@@ -483,6 +490,7 @@ public class BasicUtils {
         }
     }
 
+    @Deprecated
     public static <T> boolean gloop(GenericSequenceAdapter<T> seqAdapter,
                                     ExceptionQuadConsumer<Integer, T, LoopState, Flag> quadConsumer) throws Exception {
         Flag loopFlag = new Flag();
@@ -504,14 +512,195 @@ public class BasicUtils {
     }
 
 
+    public static void main(String[] args) throws Exception {
+
+        Map<String, String> map = MapService.of("name", "vallue",
+                "age", "11");
+        hloop(map(map), (idx, entry, s) -> {
+            if (entry.getKey().equals("name")) {
+                s.continueLoop();
+            } else {
+                System.out.println(entry);
+            }
+        });
+
+        MyArrayList<String> strings = asList("1", "2", "3");
+
+        hloop(list(strings), (idx, item, s) -> {
+            if (item.equals("2")) {
+                s.continueLoop();
+            } else {
+                System.out.println(item);
+            }
+        });
+
+        hloop(str("123"), (idx, c, s) -> {
+            if (c.equals('2')) {
+                s.continueLoop();
+            } else {
+                System.out.println(c);
+            }
+        });
+
+        Enumeration<String> days;
+        Vector<String> dayNames = new Vector<String>();
+        dayNames.add("Sunday");
+        dayNames.add("Monday");
+        dayNames.add("Tuesday");
+        dayNames.add("Wednesday");
+        dayNames.add("Thursday");
+        dayNames.add("Friday");
+        dayNames.add("Saturday");
+        days = dayNames.elements();
+
+        hloop(enumeration(days), (idx, item, s) -> {
+            System.out.println(item);
+        });
+    }
+
+
+    interface IteratorAdaptor<T> {
+        Iterator<T> getIterator();
+    }
+
+    static class MapIteratorAdaptor<K, V> implements IteratorAdaptor<Map.Entry<K, V>> {
+        Map<K, V> map;
+
+        public MapIteratorAdaptor(Map<K, V> map) {
+            this.map = map;
+        }
+
+        public Iterator<Map.Entry<K, V>> getIterator() {
+            return map.entrySet().iterator();
+        }
+    }
+
+    static class ListIteratorAdaptor<T> implements IteratorAdaptor<T> {
+        List<T> list;
+
+        public ListIteratorAdaptor(List<T> list) {
+            this.list = list;
+        }
+
+        public Iterator<T> getIterator() {
+            return list.iterator();
+        }
+    }
+
+    static class StringIterator implements Iterator<Character> {
+        Integer currentIndex = -1;
+        String string;
+
+        public StringIterator(String string) {
+            this.string = string;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return currentIndex < string.length() - 1;
+        }
+
+        @Override
+        public Character next() {
+            char c = string.charAt(currentIndex + 1);
+            currentIndex++;
+            return c;
+        }
+    }
+
+    static class StringIteratorAdaptor implements IteratorAdaptor<Character> {
+        String string;
+
+        public StringIteratorAdaptor(String string) {
+            this.string = string;
+        }
+
+        public Iterator<Character> getIterator() {
+            return new StringIterator(this.string);
+        }
+    }
+
+
+    static class EnumerationIterator<T> implements Iterator<T> {
+        Enumeration<T> enumeration;
+
+        public EnumerationIterator(Enumeration<T> enumeration) {
+            this.enumeration = enumeration;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return enumeration.hasMoreElements();
+        }
+
+        @Override
+        public T next() {
+            return enumeration.nextElement();
+        }
+    }
+
+    static class EnumerationIteratorAdaptor<T> implements IteratorAdaptor<T> {
+        Enumeration<T> enumeration;
+
+        public EnumerationIteratorAdaptor(Enumeration<T> enumeration) {
+            this.enumeration = enumeration;
+        }
+
+        public Iterator<T> getIterator() {
+            return new EnumerationIterator<>(enumeration);
+        }
+    }
+
+
+    public static <T> IteratorAdaptor<T> list(List<T> list) {
+        return new ListIteratorAdaptor<>(list);
+    }
+
+    public static IteratorAdaptor<Character> str(String string) {
+        return new StringIteratorAdaptor(string);
+    }
+
+    public static <K, V> MapIteratorAdaptor<K, V> map(Map<K, V> map) {
+        return new MapIteratorAdaptor<>(map);
+    }
+
+    public static <T> EnumerationIteratorAdaptor<T> enumeration(Enumeration<T> enumeration) {
+        return new EnumerationIteratorAdaptor<>(enumeration);
+    }
+
+
+    public static <T> void hloop(IteratorAdaptor<T> iteratorAdaptor,
+                                 ExceptionTriConsumer<Integer, T, LoopState> quadConsumer) throws Exception {
+        LoopState loopState = new LoopState();
+        Iterator<T> iterator = iteratorAdaptor.getIterator();
+        int count = 0;
+        while (iterator.hasNext()) {
+            loopState.reset();
+            T next = iterator.next();
+            quadConsumer.accept(count++, next,
+                    loopState);
+            if (loopState.emptyState()) {
+                loopState.normal();
+            }
+            if (loopState.isContinue()) {
+                continue;
+            }
+            if (loopState.isBreak()) {
+                break;
+            }
+        }
+
+    }
+
+    @Deprecated
     public static <T> void gloop(Enumeration<T> enumeration,
-                                    ExceptionTriConsumer<T, LoopState, Boolean> quadConsumer) throws Exception {
+                                 ExceptionTriConsumer<T, LoopState, Boolean> quadConsumer) throws Exception {
         LoopState loopState = new LoopState();
         boolean hasNext;
-        while(enumeration.hasMoreElements()) {
+        while (enumeration.hasMoreElements()) {
             T t = enumeration.nextElement();
             hasNext = enumeration.hasMoreElements();
-            quadConsumer.accept(t, loopState , hasNext);
+            quadConsumer.accept(t, loopState, hasNext);
             if (loopState.emptyState()) {
                 loopState.normal();
             }
@@ -523,13 +712,15 @@ public class BasicUtils {
             }
         }
     }
+
+    @Deprecated
     public static <T> boolean gloop(Enumeration<T> enumeration,
                                     ExceptionQuadConsumer<T, LoopState, Flag, Boolean> quadConsumer) throws Exception {
         Flag loopFlag = new Flag();
         LoopState loopState = new LoopState();
 
         boolean hasNext;
-        while((hasNext = enumeration.hasMoreElements())) {
+        while ((hasNext = enumeration.hasMoreElements())) {
             T t = enumeration.nextElement();
             quadConsumer.accept(t, loopState, loopFlag, hasNext);
             if (loopState.emptyState()) {
@@ -545,18 +736,22 @@ public class BasicUtils {
         return loopFlag.get();
     }
 
+    @Deprecated
     public static <T> GenericListSeqAdapter<T> forList(List<T> list) {
         return new GenericListSeqAdapter<>(list);
     }
 
+    @Deprecated
     public static <T> GenericArraySeqAdapter<T> forArr(T[] arr) {
         return new GenericArraySeqAdapter<>(arr);
     }
 
+    @Deprecated
     public static GenericStringSeqAdapter<Character> forStr(String string) {
         return new GenericStringSeqAdapter<>(string);
     }
 
+    @Deprecated
     public static GenericIntegerSeqAdapter<Integer> forInt(Integer integer) {
         return new GenericIntegerSeqAdapter<>(integer);
     }

@@ -8,21 +8,55 @@ import java.text.MessageFormat;
 import java.util.*;
 
 import static fit.wenchao.utils.basic.BasicUtils.forArr;
+import static fit.wenchao.utils.basic.BasicUtils.gloop;
 
 public class StringFormatter {
+
+    public static <T> ArrayWrapper<T> arr(T[] arr) {
+        return new ArrayWrapper<T>(arr);
+    }
+
+    private static class ArrayWrapper<T> {
+
+        T[] arr;
+
+        public ArrayWrapper(T[] arr) {
+            this.arr = arr;
+        }
+
+        public T[] getArr() {
+            return arr;
+        }
+    }
 
     public String formatString(String format, Object... args) {
 
         //将format字符串转换成messageFormat能处理的格式
         String formatStrCanBeProcessedByMessageFormat = transRowFormatStrToTheOneCanBeProcessedByMsgFormat(format);
 
-        //将所有参数替换成String，包括数组
-        transEachElemToString(args);
+        unpackArrayWrapper(args);
 
-        return doFormatStringWithPlaceholder(formatStrCanBeProcessedByMessageFormat, args);
+        //将所有参数替换成String，包括数组
+        String[] stringDescForArgs = transEachElemToString(args);
+
+        return doFormatStringWithPlaceholder(formatStrCanBeProcessedByMessageFormat, stringDescForArgs);
     }
 
-    private String doFormatStringWithPlaceholder (String formatCanBeProcessedByMsgFormat, Object... args) {
+    private void unpackArrayWrapper(Object[] args) {
+        try {
+            gloop(forArr(args), (i, e, s) -> {
+                if (e instanceof ArrayWrapper) {
+                    Object[] arr = ((ArrayWrapper<?>) e).getArr();
+                    args[i] = arr;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private String doFormatStringWithPlaceholder(String formatCanBeProcessedByMsgFormat, Object... args) {
         MessageFormat messageFormat = new MessageFormat(formatCanBeProcessedByMsgFormat);
         String rst = messageFormat.format(args);
         return rst;
@@ -36,6 +70,9 @@ public class StringFormatter {
     }
 
     public String transRowFormatStrToTheOneCanBeProcessedByMsgFormat(String rowFormat) {
+        if (rowFormat == null) {
+            return "null";
+        }
         StringBuilder formatCanBeProcessedByMsgFormat = new StringBuilder("");
 
         List<Entry> singleQuotesEntryList = new ArrayList<>();
@@ -104,7 +141,8 @@ public class StringFormatter {
                 (lastEntry.getV() == null || idx + 1 < lastEntry.getV());
     }
 
-    public static void transEachElemToString(Object[] args) {
+    public static String[] transEachElemToString(Object[] args) {
+        String[] stringDescForArgs = new String[args.length];
         try {
             BasicUtils.gloop(forArr(args), (idx, itm, state) -> {
                 String s = null;
@@ -115,11 +153,15 @@ public class StringFormatter {
                 } else {
                     s = itm.toString();
                 }
-                args[idx] = s;
+                //args[idx] = s;
+                stringDescForArgs[idx] = s;
             });
+            return stringDescForArgs;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
+
     }
 
     private static String convertArrayToString(Object arg) {
