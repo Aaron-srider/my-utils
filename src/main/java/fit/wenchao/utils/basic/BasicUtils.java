@@ -75,6 +75,10 @@ public class BasicUtils {
         }
     }
 
+    /**
+     * To simulate a boolean flag var used in function gloop and hloop as an idenfication of the occurance of an event.
+     * For example, this var can be used to find a particular element.
+     */
     public static class Flag {
         boolean flag;
 
