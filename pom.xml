@@ -6,7 +6,7 @@
 
     <groupId>fit.wenchao</groupId>
     <artifactId>my-utils</artifactId>
-    <version>1.0</version>
+    <version>1.1.1</version>
 
     <name>my-utils</name>
     <description>my personal java utils</description>
@@ -49,6 +49,13 @@
             <artifactId>commons-io</artifactId>
             <version>2.6</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.11</version>
+        </dependency>
+
 
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -157,7 +164,7 @@
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
-            <!--for gpg signing-->
+            <!--&lt;!&ndash;for gpg signing&ndash;&gt;-->
             <!--<plugin>-->
             <!--    <groupId>org.apache.maven.plugins</groupId>-->
             <!--    <artifactId>maven-gpg-plugin</artifactId>-->
