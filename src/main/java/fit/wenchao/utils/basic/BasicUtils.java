@@ -7,6 +7,7 @@ import fit.wenchao.utils.function.*;
 import java.util.*;
 
 import static fit.wenchao.utils.collection.MyArrayList.asList;
+
 public class BasicUtils {
 
     /**
@@ -202,13 +203,14 @@ public class BasicUtils {
     }
 
 
-    private static interface GenericSequenceAdapter<T> {
+    @Deprecated
+    private interface GenericSequenceAdapter<T> {
         T get(int index);
 
         int size();
     }
 
-
+    @Deprecated
     private static class GenericArraySeqAdapter<T> implements GenericSequenceAdapter<T> {
 
         T[] array;
@@ -228,6 +230,7 @@ public class BasicUtils {
         }
     }
 
+    @Deprecated
     private static class GenericListSeqAdapter<T> implements GenericSequenceAdapter<T> {
 
         List<T> list;
@@ -247,6 +250,7 @@ public class BasicUtils {
         }
     }
 
+    @Deprecated
     private static class GenericStringSeqAdapter<T> implements GenericSequenceAdapter<T> {
 
         String string;
@@ -266,6 +270,7 @@ public class BasicUtils {
         }
     }
 
+    @Deprecated
     private static class GenericIntegerSeqAdapter<T> implements GenericSequenceAdapter<T> {
 
         Integer integer;
@@ -591,6 +596,18 @@ public class BasicUtils {
         }
     }
 
+    static class ArrayIteratorAdaptor<T> implements IteratorAdaptor<T> {
+        T[] array;
+
+        public ArrayIteratorAdaptor(T[] array) {
+            this.array = array;
+        }
+
+        public Iterator<T> getIterator() {
+            return Arrays.stream(array).iterator();
+        }
+    }
+
     static class StringIterator implements Iterator<Character> {
         Integer currentIndex = -1;
         String string;
@@ -658,6 +675,10 @@ public class BasicUtils {
 
     public static <T> IteratorAdaptor<T> list(List<T> list) {
         return new ListIteratorAdaptor<>(list);
+    }
+
+    public static <T> IteratorAdaptor<T> arr(T[] arr) {
+        return new ArrayIteratorAdaptor<>(arr);
     }
 
     public static IteratorAdaptor<Character> str(String string) {

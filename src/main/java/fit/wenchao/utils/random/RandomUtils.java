@@ -1,10 +1,10 @@
 package fit.wenchao.utils.random;
 
 import org.apache.commons.lang3.RandomStringUtils;
-
 import java.util.Random;
 
 public class RandomUtils {
+  
     /**
      * 随机生成一个区间内的整数（闭区间）
      * @param start 开始起始，可以为负数
@@ -56,4 +56,5 @@ public class RandomUtils {
     public static String randomStringFromVisibleAscii(int minLen, int maxLen) {
         return RandomStringUtils.randomAscii(minLen, maxLen + 1);
     }
+
 }
