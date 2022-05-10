@@ -27,6 +27,10 @@ public class RandomUtils {
         return RandomStringUtils.random(len, charSet);
     }
 
+    public static String randomFromCharset(int minLen, int maxLen , String charSet) {
+        return randomFromCharset(randomIntRange(minLen,maxLen), charSet);
+    }
+
     public static String randomStringFromDigitalFor(int len) {
         return RandomStringUtils.randomNumeric(len);
     }
