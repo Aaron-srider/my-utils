@@ -6,6 +6,9 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static fit.wenchao.utils.basic.BasicUtils.forArr;
@@ -14,39 +17,69 @@ import static java.lang.reflect.Modifier.isPublic;
 import static java.util.Arrays.asList;
 
 public class ReflectUtils {
-    public static <T> T newInstance(Class<T> clazz) {
-        T t = null;
-        try {
-            t = clazz.newInstance();
-            return t;
-        } catch (InstantiationException | IllegalAccessException e) {
-            StrUtils.outf("can not create instance of class:{} throw default constructor, please " +
-                    "check if an public default constructor exists.", clazz.getName());
-            e.printStackTrace();
-            return null;
-        }
+
+    /**
+     * get all fields in specific object, including fields from it's superClass
+     * @param object target object fields are belong to
+     * @return fields from class of target object
+     */
+    public static Field[] getAllFields(Object object){
+        return getAllFields(object.getClass());
     }
 
+    /**
+     * get all fields in specific class, including fields from it's superClass
+     * @param clazz target class fields are belong to
+     * @return fields from target class
+     */
+    public static Field[] getAllFields(Class clazz){
+        List<Field> fieldList = new ArrayList<>();
+        while (clazz != null){
+            fieldList.addAll(new ArrayList<>(Arrays.asList(clazz.getDeclaredFields())));
+            clazz = clazz.getSuperclass();
+        }
+        Field[] fields = new Field[fieldList.size()];
+        fieldList.toArray(fields);
+        return fields;
+    }
+
+    /**
+     * combination function of Class::getConstructor and Constructor::newInstance to
+     *  provide a convenience reflect way to invoke constructor of a class ,cause
+     * Class::newInstance can only invoke default constructor of target Class.
+     * @param clazz target class to be initialized.
+     * @param parameterTypes parameterTypes of target constructor to be invoked
+     * @param initargs real args that compatible with {@code parameterTypes}
+     * @param <T> type var of target class
+     * @return a new instance of target class
+     * @throws InvocationTargetException target constructor throw an exception
+     * @throws IllegalAccessException target constructor is not accessible due to it's modifier
+     * @throws NoSuchMethodException there is no such constructor compatible with
+     * parameterTypes provided.
+     * @throws InstantiationException target class is an abstract one.
+     */
     public static <T> T newInstance(Class<T> clazz,
-                                    Class<?>[] parameterTypes, Object[] initargs) {
+                                    Class<?>[] parameterTypes,
+                                    Object[] initargs) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
         Constructor<T> constructor = null;
         try {
             constructor = clazz.getConstructor(parameterTypes);
-            T t = constructor.newInstance(initargs);
-            return t;
+            return constructor.newInstance(initargs);
         } catch (InvocationTargetException e) {
-
             StrUtils.outf("constructor:{} throw an exception:{}", asList(parameterTypes),
                     e.getTargetException());
+            throw e;
         } catch (NoSuchMethodException e) {
             StrUtils.outf("constructor:{} not found.", asList(parameterTypes));
+            throw e;
         } catch (InstantiationException e) {
             StrUtils.outf("abstract class:{} can not be instantiated.", clazz.getName());
+            throw e;
         } catch (IllegalAccessException e) {
             StrUtils.outf("constructor:{} with modifiers:{} can not be access.", asList(parameterTypes),
                     Modifier.toString(constructor.getModifiers()));
+            throw e;
         }
-        return null;
     }
 
     public static <T> boolean hasPublicDefaultConstructor(Class<T> clazz) throws Exception {
