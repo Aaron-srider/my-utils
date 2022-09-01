@@ -14,8 +14,10 @@ public class PropertiesUtils {
      */
     public static Properties getProperties(String propertiesName)  {
         try(InputStream resource = ClassLoader.getSystemClassLoader().getResourceAsStream(propertiesName);){
+            if( resource==null) {
+                return null;
+            }
             Properties properties = new Properties();
-            assert resource != null;
             properties.load(new InputStreamReader(resource,"UTF-8"));
             return properties;
         } catch (IOException e) {
