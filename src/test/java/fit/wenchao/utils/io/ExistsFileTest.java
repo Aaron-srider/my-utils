@@ -6,7 +6,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import static fit.wenchao.utils.string.StrUtils.ft;
+import static fit.wenchao.utils.string.placeholderString.TemplateString.ft;
+
 
 class ExistsFileTest {
 

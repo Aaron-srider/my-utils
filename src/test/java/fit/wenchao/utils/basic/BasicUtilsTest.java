@@ -1,7 +1,6 @@
 package fit.wenchao.utils.basic;
 
 import fit.wenchao.utils.collection.MyArrayList;
-import fit.wenchao.utils.string.StrUtils;
 import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 import org.junit.Test;
@@ -193,9 +192,9 @@ public class BasicUtilsTest {
         MyArrayList<String> elemList = MyArrayList.getDefaultList(String.class);
         gloop(eList, (e, s, hasNext) -> {
             elemList.add(e);
-            StrUtils.outf("cur:{}", e);
+            System.out.println("cur: " + e);
             hasNextList.add(hasNext);
-            StrUtils.outf("hasNext:{}", hasNext);
+            System.out.println("hasNext: " + hasNext);
         });
 
         for(int i = 0; i < hasNextList.size(); i++){

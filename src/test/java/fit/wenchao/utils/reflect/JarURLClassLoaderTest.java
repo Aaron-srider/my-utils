@@ -1,16 +1,9 @@
 package fit.wenchao.utils.reflect;
 
-import fit.wenchao.utils.string.StrUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.Runner;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Set;
-
-import static fit.wenchao.utils.basic.BasicUtils.forArr;
-import static fit.wenchao.utils.basic.BasicUtils.gloop;
-import static org.junit.jupiter.api.Assertions.*;
 
 class JarURLClassLoaderTest {
 
@@ -25,8 +18,6 @@ class JarURLClassLoaderTest {
 
         Set<Class> classes = jarURLClassLoader.loadSubClass(Runner.class, "org.junit");
         Object[] objects = classes.stream().toArray();
-        gloop(forArr(objects), (i, e, s) -> {
-            StrUtils.outf("class name:{}", e.toString());
-        });
+
     }
 }

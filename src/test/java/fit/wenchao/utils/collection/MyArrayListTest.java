@@ -1,21 +1,15 @@
 package fit.wenchao.utils.collection;
 
 import fit.wenchao.utils.basic.BasicUtils;
-import fit.wenchao.utils.string.StrUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import static fit.wenchao.utils.basic.BasicUtils.forList;
-import static fit.wenchao.utils.string.StrUtils.ft;
+import static fit.wenchao.utils.string.placeholderString.TemplateString.ft;
 import static java.lang.System.out;
-import static org.junit.Assert.*;
-import static sun.misc.Version.println;
+import static org.junit.Assert.assertTrue;
 
 
 public class MyArrayListTest {

@@ -7,8 +7,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="path" />
+        <module name="reflect" />
+        <module name="other" />
+        <module name="file" />
+        <module name="string" />
+        <module name="io" />
         <module name="MyUtils" />
-        <module name="my-utils" />
       </profile>
     </annotationProcessing>
   </component>

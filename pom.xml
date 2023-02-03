@@ -6,7 +6,16 @@
 
     <groupId>fit.wenchao</groupId>
     <artifactId>my-utils</artifactId>
+    <packaging>pom</packaging>
     <version>1.1.1</version>
+    <modules>
+        <module>path</module>
+        <module>string</module>
+        <module>reflect</module>
+        <module>other</module>
+        <module>file</module>
+        <module>io</module>
+    </modules>
 
     <name>my-utils</name>
     <description>my personal java utils</description>
