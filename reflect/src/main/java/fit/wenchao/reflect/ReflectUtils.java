@@ -1,12 +1,16 @@
 package fit.wenchao.reflect;
 
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ReflectUtils {
+
+    private static Logger log = LoggerFactory.getLogger(ReflectUtils.class);
 
     /**
      * get all fields in specific object, including fields from it's superClass
@@ -34,105 +38,27 @@ public class ReflectUtils {
         fieldList.toArray(fields);
         return fields;
     }
-//
-//    public static <T> boolean hasPublicDefaultConstructor(Class<T> clazz) {
-//        Constructor<?>[] constructors = clazz.getConstructors();
-//        boolean found = false;
-//        for (Constructor<?> constructor : constructors) {
-//            int parameterCount = constructor.getParameterCount();
-//            if (parameterCount == 0 && isPublic(constructor.getModifiers())) {
-//                found = true;
-//                break;
-//            }
-//        }
-//        return found;
-//    }
-//
-//    public static <T> boolean hasPublicConstructor(Class<T> clazz, Class<?>[] argTypes) {
-//        try {
-//            Constructor<T> constructor = clazz.getConstructor(argTypes);
-//            if (isPublic(constructor.getModifiers())) {
-//                return true;
-//            }
-//            throw new NoSuchMethodException();
-//        }
-//        catch (NoSuchMethodException e) {
-//            System.out.println("constructor not found or is not public.");
-//            return false;
-//        }
-//    }
-//
-//
-//    public static <A extends Annotation, T> Field findFirstFieldAnnotatedBy(Class<A> annoType, Class<T> clazz) {
-//        AtomicReference<Object> o = null;
-//        Field[] declaredFields = clazz.getDeclaredFields();
-//
-//        Field field = null;
-//        for (Field declaredField : declaredFields) {
-//            A anno = declaredField.getAnnotation(annoType);
-//            if (anno != null) {
-//                field = declaredField;
-//                break;
-//            }
-//        }
-//
-//        return field;
-//    }
-//
-//
-//    public static <A extends Annotation, T> Class findFirstInterfaceAnnotatedBy
-//            (Class<A> annoType, Class<T> clazz) {
-//
-//        Class<?>[] interfaces = clazz.getInterfaces();
-//
-//        Class targetInterface = null;
-//
-//        boolean found = false;
-//        for (Class<?> anInterface : interfaces) {
-//            A annotation = anInterface.getAnnotation(annoType);
-//
-//            if (annotation != null) {
-//                targetInterface = anInterface;
-//            }
-//            found = true;
-//            break;
-//        }
-//
-//
-//        if (found) {
-//            return targetInterface;
-//        }
-//        else {
-//            return findFirstInterfaceAnnotatedBy(annoType, clazz.getSuperclass());
-//        }
-//    }
-//
+
+    public static <T> T getFieldValue(Object targetObj, String fieldName, Class<T> expectedFieldType) {
+        Field targetField = null;
+        Class<?> objClass = targetObj.getClass();
+        try {
+            targetField = objClass.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+        Class<?> fieldActualClass = targetField.getType();
+        if (!expectedFieldType.isAssignableFrom(fieldActualClass)) {
+            log.error("Class :{} can not be cast to :{}", fieldActualClass, expectedFieldType);
+            throw new RuntimeException(ft("Class :{} can not be cast to :{}", fieldActualClass, expectedFieldType));
+        }
+        targetField.setAccessible(true);
+        T o = null;
+        try {
+            o = (T) targetField.get(targetObj);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        return o;
+    }
 }
-//
-//@Retention(RetentionPolicy.RUNTIME)
-//@interface TestAnno {
-//
-//}
-//
-//@TestAnno
-//interface Test {
-//
-//}
-//
-////@TestAnno
-//class A implements Test {
-//
-//}
-//
-//@TestAnno
-//class AA extends A {
-//    public void func() {
-//
-//    }
-//}
-//
-//class AAA extends AA {
-//    public void func() {
-//
-//    }
-//}
